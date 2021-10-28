@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nagarro.constants.Constants;
 import com.nagarro.dao_classes.UserDAO;
 import com.nagarro.pojo.Authors;
 import com.nagarro.pojo.Books;
@@ -64,8 +65,7 @@ public class FrontController {
 			mv.setViewName("displayBooks.jsp");
 
 			
-			String url = "http://localhost:8081/books";
-			ResponseEntity<List<Books>> response1 = this.restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Books>>() {});
+			ResponseEntity<List<Books>> response1 = this.restTemplate.exchange(Constants.REST_URL_GET_ALL_BOOKS, HttpMethod.GET, null, new ParameterizedTypeReference<List<Books>>() {});
 			List<Books> listBooks = response1.getBody();
 			
 			mv.addObject("listBooks", listBooks);
@@ -87,8 +87,7 @@ public class FrontController {
 
 		HttpSession session = request.getSession(false); 
 		ModelAndView mv ;
-		String url = "http://localhost:8081/authors";
-		ResponseEntity<List<Authors>> response1 = this.restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Authors>>() {});
+		ResponseEntity<List<Authors>> response1 = this.restTemplate.exchange(Constants.REST_URL_GET_ALL_AUTHORS, HttpMethod.GET, null, new ParameterizedTypeReference<List<Authors>>() {});
 		List<Authors> listAuthors = response1.getBody();
 		
 		
@@ -129,20 +128,18 @@ public class FrontController {
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		
-		String url = "http://localhost:8081/book/{id}";
-		Map<String, Integer> urlParams = new HashMap<String, Integer>();
+		
+		Map<String, Integer> urlParams = new HashMap<>();
 		urlParams.put("id", id);
 		 
         HttpHeaders headers = new HttpHeaders();
         HttpEntity requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<Books> response1 = this.restTemplate.exchange(url, HttpMethod.GET, requestEntity, Books.class, urlParams);
+        ResponseEntity<Books> response1 = this.restTemplate.exchange(Constants.REST_URL_EDIT_BOOK, HttpMethod.GET, requestEntity, Books.class, urlParams);
         
         Books book = response1.getBody();
         
         
-        
-        String url2 = "http://localhost:8081/authors";
-		ResponseEntity<List<Authors>> response2 = this.restTemplate.exchange(url2, HttpMethod.GET, null, new ParameterizedTypeReference<List<Authors>>() {});
+		ResponseEntity<List<Authors>> response2 = this.restTemplate.exchange(Constants.REST_URL_GET_ALL_AUTHORS, HttpMethod.GET, null, new ParameterizedTypeReference<List<Authors>>() {});
 		List<Authors> listAuthors = response2.getBody();
 		
 		
@@ -160,8 +157,6 @@ public class FrontController {
 		int bookCode = Integer.parseInt(request.getParameter("bookCode"));
 		String bookName = request.getParameter("bookName");
 		String authorName = request.getParameter("author");
-		
-		String url = "http://localhost:8081/book";
 	    
 		HttpHeaders headers = new HttpHeaders();
 
@@ -180,7 +175,7 @@ public class FrontController {
 		
 	    HttpEntity<Books> entity = new HttpEntity<>(book, headers);
 
-	    Books b = this.restTemplate.postForObject(url, entity, Books.class);
+	    Books b = this.restTemplate.postForObject(Constants.REST_URL_ADD_NEW_BOOK, entity, Books.class);
 	    
 		System.out.println(b); 
 		
@@ -192,18 +187,14 @@ public class FrontController {
 	
 		int bookCode = Integer.parseInt(request.getParameter("id"));
 		
-		String url = "http://localhost:8081/book/{bookCode}";
-		
-		this.restTemplate.delete(url, bookCode);
+		this.restTemplate.delete(Constants.REST_URL_DELETE_BOOK, bookCode);
 		
 		response.sendRedirect("displayBooks");
 	}
 	
 	@RequestMapping("/update")
 	public void updateBook(HttpServletRequest request, HttpServletResponse response) throws ParseException, IOException {
-				
-		String url = "http://localhost:8081/book/{bookCode}";
-		
+
 		// create headers
 	    HttpHeaders headers = new HttpHeaders();
 	    
@@ -236,7 +227,7 @@ public class FrontController {
 		// build the request
 	    HttpEntity<Books> entity = new HttpEntity<>(book, headers);
 	    
-	    this.restTemplate.put(url, entity, bookCode);
+	    this.restTemplate.put(Constants.REST_URL_UPDATE_BOOK, entity, bookCode);
 	    
 	    response.sendRedirect("displayBooks");
 
@@ -250,8 +241,7 @@ public class FrontController {
 		ModelAndView mv = new ModelAndView();
 		if(name != null) {
 			
-			String url = "http://localhost:8081/books";
-			ResponseEntity<List<Books>> response1 = this.restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Books>>() {});
+			ResponseEntity<List<Books>> response1 = this.restTemplate.exchange(Constants.REST_URL_GET_ALL_BOOKS, HttpMethod.GET, null, new ParameterizedTypeReference<List<Books>>() {});
 			List<Books> listBooks = response1.getBody();
 			mv.setViewName("displayBooks.jsp");
 			mv.addObject("listBooks", listBooks);
