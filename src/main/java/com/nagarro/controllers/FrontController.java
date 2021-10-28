@@ -130,7 +130,7 @@ public class FrontController {
 		
 		
 		String url = "http://localhost:8081/book/{id}";
-		Map<String, Integer> urlParams = new HashMap<>();
+		Map<String, Integer> urlParams = new HashMap<String, Integer>();
 		urlParams.put("id", id);
 		 
         HttpHeaders headers = new HttpHeaders();
