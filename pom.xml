@@ -7,10 +7,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Assignment09 Maven Webapp</name>
   <url>http://maven.apache.org</url>
-<properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-</properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -97,6 +93,15 @@
 	
     
   </dependencies>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.1</version>
+    <configuration>
+        <source>1.7</source>
+        <target>1.7</target>
+    </configuration>
+</plugin>
   <build>
     <finalName>Assignment09</finalName>
   </build>
